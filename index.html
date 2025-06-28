@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgilePop - Plataforma de Eventos</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <div class="navbar-brand">
+                    <i class="fas fa-calendar-alt"></i> AgilePop
+                </div>
+                <ul class="navbar-nav">
+                    <li><a href="index.html" class="navbar-link active">Eventos</a></li>
+                    <li><a href="#" class="navbar-link" id="myEventsLink" style="display: none;">Meus Eventos</a></li>
+                    <li><a href="#" class="navbar-link" id="adminLink" style="display: none;">Admin</a></li>
+                    <li><a href="/AgilePop.Web/login.html" class="navbar-link" id="loginLink">Entrar</a></li>
+                    <li><a href="#" class="navbar-link" id="logoutLink" style="display: none;">Sair</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-8 hero-section">
+        <div class="container">
+            <div class="text-center" style="color: white;">
+                <h1 style="color: white; margin-bottom: var(--spacing-4);">
+                    Descubra Eventos Incríveis
+                </h1>
+                <p
+                    style="color: rgba(255, 255, 255, 0.9); font-size: var(--font-size-lg); margin-bottom: var(--spacing-8);">
+                    Conecte-se com eventos de tecnologia e gestão que vão transformar sua carreira
+                </p>
+                <div class="flex justify-center gap-4">
+                    <button class="btn btn-lg" style="background-color: white; color: var(--primary-color);"
+                        onclick="scrollToEvents()">
+                        <i class="fas fa-search"></i> Explorar Eventos
+                    </button>
+                    <button class="btn btn-lg btn-outline" style="border-color: white; color: white;"
+                        onclick="criarEvento()" id="createEventBtn">
+                        <i class="fas fa-plus"></i> Criar Evento
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-6" style="background-color: white; box-shadow: var(--shadow-sm);">
+        <div class="container">
+            <div class="flex flex-col gap-4">
+                <h3>Filtrar Eventos</h3>
+                <div class="flex gap-4 items-center flex-wrap">
+                    <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+                        <select class="form-input form-select" id="categoryFilter">
+                            <option value="">Todas as categorias</option>
+                            <option value="tecnologia">Tecnologia</option>
+                            <option value="gestao">Gestão</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="design">Design</option>
+                            <option value="negocios">Negócios</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0; min-width: 200px; flex-grow: 1;">
+                        <input type="text" class="form-input" id="searchInput" placeholder="Buscar eventos...">
+                    </div>
+                    <button class="btn btn-primary" onclick="filterEvents()">
+                        <i class="fas fa-filter"></i> Filtrar
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearFilters()">
+                        <i class="fas fa-times"></i> Limpar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-8" id="eventsSection">
+        <div class="container">
+            <div class="flex justify-between items-center mb-8">
+                <h2>Próximos Eventos</h2>
+                <div class="flex gap-2">
+                    <button class="btn btn-secondary btn-sm" onclick="toggleView('grid')" id="gridViewBtn">
+                        <i class="fas fa-th"></i> Grade
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="toggleView('list')" id="listViewBtn">
+                        <i class="fas fa-list"></i> Lista
+                    </button>
+                </div>
+            </div>
+
+            <div id="loadingEvents" class="text-center py-8">
+                <div class="loading"></div>
+                <p class="mt-4">Carregando eventos...</p>
+            </div>
+
+            <div id="eventsGrid" class="grid grid-cols-3 gap-6" style="display: none;">
+            </div>
+
+            <div id="eventsList" class="flex flex-col gap-4" style="display: none;">
+            </div>
+
+            <div id="noEventsMessage" class="text-center py-8" style="display: none;">
+                <i class="fas fa-calendar-times"
+                    style="font-size: 3rem; color: var(--gray-400); margin-bottom: var(--spacing-4);"></i>
+                <h3 style="color: var(--gray-500);">Nenhum evento encontrado</h3>
+                <p style="color: var(--gray-400);">Tente ajustar os filtros ou volte mais tarde para ver novos eventos.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalEventTitle">Título do Evento</h3>
+                <button class="modal-close" onclick="closeEventModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="modalEventContent">
+                    <div id="modalEventVideoContainer" style="margin-bottom: var(--spacing-4); display: none;">
+                        </div>
+
+                    <img id="modalEventImage" src="" alt="Imagem do Evento"
+                        style="max-width: 100%; height: auto; border-radius: var(--border-radius-md); margin-top: var(--spacing-4); display: none;">
+
+                    <p><strong><i class="fas fa-calendar-alt"></i> Data:</strong> <span id="modalEventDate"></span></p>
+                    <p><strong><i class="fas fa-map-marker-alt"></i> Local:</strong> <span
+                                id="modalEventLocation"></span></p>
+                    <p><strong><i class="fas fa-tag"></i> Categoria:</strong> <span id="modalEventCategory"></span></p>
+                    <p id="modalEventDescription"></p>
+                    <p><strong><i class="fas fa-users"></i> Participantes:</strong> <span
+                                id="modalEventParticipants"></span>/<span id="modalEventMaxParticipants"></span></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEventModal()">Fechar</button>
+                <button class="btn btn-primary" id="registerEventBtn" onclick="registerForEvent()">
+                    <i class="fas fa-user-plus"></i> Inscrever-se
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="createEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Criar Novo Evento</h3>
+                <button class="modal-close" onclick="closeCreateEventModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createEventForm">
+                    <div class="form-group">
+                        <label class="form-label" for="eventTitle">Título do Evento</label>
+                        <input type="text" class="form-input" id="eventTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="eventDescription">Descrição</label>
+                        <textarea class="form-input form-textarea" id="eventDescription" required></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label" for="eventDate">Data e Hora</label>
+                            <input type="datetime-local" class="form-input" id="eventDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="eventCategory">Categoria</label>
+                            <select class="form-input form-select" id="eventCategory" required>
+                                <option value="">Selecione uma categoria</option>
+                                <option value="tecnologia">Tecnologia</option>
+                                <option value="gestao">Gestão</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="design">Design</option>
+                                <option value="negocios">Negócios</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label" for="eventLocation">Local</label>
+                            <input type="text" class="form-input" id="eventLocation" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="eventMaxParticipants">Máximo de Participantes</label>
+                            <input type="number" class="form-input" id="eventMaxParticipants" min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="eventImageUrl">URL da Imagem / Vídeo do YouTube (opcional)</label>
+                        <input type="url" class="form-input" id="eventImageUrl">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCreateEventModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="salvarEvento()">
+                    <i class="fas fa-plus"></i> Criar Evento
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">AgilePop</div>
+                <p>Conectando pessoas através de eventos incríveis</p>
+                <p style="margin-top: var(--spacing-4); font-size: var(--font-size-sm);">
+                    © 2025 AgilePop. Todos os direitos reservados.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="alertContainer"></div>
+
+    <script src="./assets/script-mock.js"></script>
+
+</body>
+
+</html>
