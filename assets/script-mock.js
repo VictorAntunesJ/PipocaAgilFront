@@ -69,7 +69,7 @@ const initialFakeEvents = [
     location: "Online",
     maxParticipants: 50,
     currentParticipants: 15,
-    imageUrl: "img/1.png",
+    imageUrl: "https://victorantunesj.github.io/PipocaAgilFront/img/1.png",
   },
   {
     id: "fake-event-2",
@@ -81,7 +81,7 @@ const initialFakeEvents = [
     location: "Centro de Convenções Tech",
     maxParticipants: 200,
     currentParticipants: 120,
-    imageUrl: "img/2.png",
+    imageUrl: "https://victorantunesj.github.io/PipocaAgilFront/img/2.png",
   },
   {
     id: "fake-event-3",
@@ -94,7 +94,7 @@ const initialFakeEvents = [
     maxParticipants: 30,
     currentParticipants: 25,
     // Exemplo de URL de vídeo do YouTube
-    imageUrl: "img/3.png", // Exemplo: Rick Astley - Never Gonna Give You Up
+    imageUrl: "https://victorantunesj.github.io/PipocaAgilFront/img/3.png", // Exemplo: Rick Astley - Never Gonna Give You Up
   },
   {
     id: "fake-event-4",
@@ -106,7 +106,7 @@ const initialFakeEvents = [
     location: "Online",
     maxParticipants: 100,
     currentParticipants: 80,
-    imageUrl: "img/4.png",
+    imageUrl: "https://victorantunesj.github.io/PipocaAgilFront/img/4.png",
   },
 ];
 
